@@ -6,10 +6,10 @@ $LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
 
 require 'simple_client.rb'
 
-get '/:project_id/:story_id' do
+post '/:project_id' do
 
     @simple = SimpleClient.new( ENV['PIVOTAL_API_KEY'] )
-	story = @simple.story( {:project_id => params[:project_id], :story_id => params[:story_id] }  )
+	story = @simple.story( {:project_id => params[:project_id], :story_id => params[:text] }  )
 
 	"#{story['name']} -\n#{story['description']}\n\n#{story['url']}"
 end
