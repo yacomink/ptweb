@@ -1,8 +1,15 @@
 require 'sinatra'
-require 'pt'
+require 'pathname'
 
-PT::UI.new ARGV
+lib = (Pathname.new(__FILE__).realpath.dirname.to_s + '/lib')
+$LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
 
-get '/' do
+require 'simple_client.rb'
 
+get '/:project_id/:story_id' do
+
+    @simple = SimpleClient.new( ENV['PIVOTAL_API_KEY'] )
+	story = @simple.story( {:project_id => params[:project_id], :story_id => params[:story_id] }  )
+
+	"#{story['name']} -\n#{story['description']}\n\n#{story['url']}"
 end
